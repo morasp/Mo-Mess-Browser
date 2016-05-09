@@ -79,7 +79,9 @@ namespace Mo_Mess.Browser
             l.Text = s.name;
             l.ForeColor = Color.WhiteSmoke;
             //l.Location = new Point(0, (P.Height - l.Height) - 10);
+            
             P.Controls.Add(l);
+            
             P.Click += P_Click;
             P.form = new ShowSensor(P.sensor);
             return P;
@@ -106,6 +108,11 @@ namespace Mo_Mess.Browser
             l.ForeColor = Color.WhiteSmoke;
             l.Location = new Point(0, (P.Height - l.Height)-10);
             P.Controls.Add(l);
+            Label type = new Label();
+            type.Text = s.Type.ToString();
+            type.ForeColor = Color.WhiteSmoke;
+            type.Location = new Point(0, (P.Height - type.Height) - 20);
+            P.Controls.Add(type);
             P.Click += P_Click;
             P.MouseDown += P_mouseDown_Animation;
             P.MouseUp += P_MouseUp_Animation;

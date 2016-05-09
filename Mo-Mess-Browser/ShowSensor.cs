@@ -17,18 +17,20 @@ namespace Mo_Mess
     public partial class ShowSensor : Form
     {
         SensorProvider sensor;
-        //Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
         Socket SensorListener;
         TcpClient Client = new TcpClient(new IPEndPoint(IPAddress.Any, 0));
 
         Thread reader;
-        List<double> valueBuffer = new List<double>();
+        Mo_Mess_Browser.buffer<double> buffer = new Mo_Mess_Browser.buffer<double>(50);
+
 
 
         private delegate void addPointCallback(System.Windows.Forms.DataVisualization.Charting.Series s, double Value);
 
 
-        public ShowSensor(object s,ref object sender)
+        #region Konstruktoren
+        public ShowSensor(object s, ref object sender)
         {
             InitializeComponent();
             sensor = (SensorProvider)s;
@@ -41,7 +43,7 @@ namespace Mo_Mess
             textBox1.Text = sensor.id.ToString();
             textBox2.Text = sensor.address.ToString();
             chart1.Series[0].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-            
+
             ((Browser.Panel2)sender).WindowShown = true;
 
         }
@@ -61,20 +63,20 @@ namespace Mo_Mess
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;
             chart1.ChartAreas[0].CursorY.IsUserSelectionEnabled = false;
             chart1.ChartAreas[0].AxisX.ScrollBar.ButtonStyle = System.Windows.Forms.DataVisualization.Charting.ScrollBarButtonStyles.ResetZoom;
-         
+
 
         }
+        #endregion
 
         private void ShowSensor_Load(object sender, EventArgs e)
         {
-
-
 
             OptimizeOfLocalFormsOnly(this);
 
             Thread t = new Thread(new ThreadStart(read));
             t.Start();
-
+            Thread readb = new Thread(new ThreadStart(readbuffer));
+            readb.Start();
 
         }
 
@@ -85,19 +87,19 @@ namespace Mo_Mess
         public void read()
         {
 
-           
+
             Client.Connect(new IPEndPoint(sensor.address, 9999));
             NetworkStream ns = Client.GetStream();
             StreamReader sr = new StreamReader(ns);
-            String data  ="";
+            String data = "";
+            Console.WriteLine("Lese Daten");
             while (Client.Connected && !sr.EndOfStream)
             {
                 try {
                     data = sr.ReadLine();
                     double Value = Double.Parse(data);
-                    Console.WriteLine(data);
-                    AddPoint(chart1.Series[0], Value);
-                }catch(IOException ioex)
+                    buffer.add(Value);
+                } catch (IOException ioex)
                 {
                     break;
                 }
@@ -109,20 +111,26 @@ namespace Mo_Mess
         {
             if (this.chart1.InvokeRequired)
             {
-                try {
+               
                     addPointCallback d = new addPointCallback(AddPoint);
-                    this.Invoke(d, new object[] { s, Value });
-                }catch(Exception ex)
+                try
                 {
-
+                    this.Invoke(d, new object[] { s, Value });
                 }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+               
             }
             else
             {
-                s.Points.Add(Value);
-                if(s.Points.Count > 100)
+                try
                 {
-                    
+                    s.Points.Add(Value);
+                }catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
 
             }
@@ -133,7 +141,7 @@ namespace Mo_Mess
             if (Client.Connected)
                 Client.Close();
 
-         
+
         }
 
         public bool OptimizeOfLocalFormsOnly(System.Windows.Forms.Control chartControlForm)
@@ -154,6 +162,20 @@ namespace Mo_Mess
             typeof(System.Windows.Forms.Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             formProp.SetValue(chartControlForm, true, null);
         }
+
+        public void readbuffer()
+        {
+            while (true)
+            {
+
+                while (buffer.dataInBuffer)
+                {
+                    AddPoint(chart1.Series[0], buffer.read());
+                    Console.WriteLine(buffer.Count);
+                }
+            }
+        }
+
     }
 }
 
