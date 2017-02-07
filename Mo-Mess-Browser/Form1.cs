@@ -23,6 +23,10 @@ namespace Mo_Mess.Browser
         private delegate void addPanelCallback(Panel p);
         Thread t;
         ShowSensorHelper sensorFrame = new ShowSensorHelper();
+        internal int bufferSize = 50;
+
+        public delegate void changesCommited(object sender, EventArgs e);
+        public event changesCommited Commited;
         public Form1()
         {
             InitializeComponent();
@@ -32,6 +36,8 @@ namespace Mo_Mess.Browser
 
             t.Start();
         }
+
+
         public void broadcastClient()
         {
             
@@ -83,7 +89,7 @@ namespace Mo_Mess.Browser
             P.Controls.Add(l);
             
             P.Click += P_Click;
-            P.form = new ShowSensor(P.sensor);
+            P.form = new ShowSensor(P.sensor, this, P);
             return P;
         }
 
@@ -97,26 +103,29 @@ namespace Mo_Mess.Browser
             P.Margin = new Padding(20);
             P.Width = 100;
             P.Height = 100;
-            PictureBox pix = new PictureBox();
-            pix.BackgroundImage = Bitmap.FromFile(@"Image1.bmp");
-            pix.SizeMode = PictureBoxSizeMode.Zoom;
-            P.Controls.Add(pix);
+            //PictureBox pix = new PictureBox();
+            //pix.BackgroundImage = Bitmap.FromFile(@"Image1.bmp");
+            //pix.SizeMode = PictureBoxSizeMode.Zoom;
+            //P.Controls.Add(pix);
             Label l = new Label();
             l.BackColor = Color.Transparent;
            
             l.Text = s.name;
             l.ForeColor = Color.WhiteSmoke;
             l.Location = new Point(0, (P.Height - l.Height)-10);
+            Font f = new Font(l.Font.FontFamily, l.Font.Size + 5);
+            l.Font = f;
             P.Controls.Add(l);
             Label type = new Label();
             type.Text = s.Type.ToString();
             type.ForeColor = Color.WhiteSmoke;
-            type.Location = new Point(0, (P.Height - type.Height) - 20);
+            type.Location = new Point(0, (P.Height - type.Height) - 30);
             P.Controls.Add(type);
             P.Click += P_Click;
+            //pix.Click += P_Click;
             P.MouseDown += P_mouseDown_Animation;
             P.MouseUp += P_MouseUp_Animation;
-            P.form = new ShowSensor(P.sensor);
+            //P.form = new ShowSensor(P.sensor,this);
             return P;
             
         }
@@ -147,6 +156,12 @@ namespace Mo_Mess.Browser
                
                 P.showForm(sensorFrame);
             }
+        }
+
+        protected virtual void onCommited(EventArgs e)
+        {
+            if (Commited != null)
+                Commited(this, e);
         }
 
         private void addPaneltoSide(Panel p)
@@ -192,6 +207,22 @@ namespace Mo_Mess.Browser
         private void btn_close_Click(object sender, EventArgs e)
         {
             this.Close();
+            Environment.Exit(0);
+        }
+
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            numericUpDown1.Value = ((TrackBar)sender).Value;
+            btn_commit_changes.Enabled = true;
+
+        }
+
+        private void btn_commit_changes_Click(object sender, EventArgs e)
+        {
+            bufferSize = trackBar1.Value;
+            ((Button)sender).Enabled = false;
+
+            onCommited(EventArgs.Empty);
         }
     }
     }

@@ -37,15 +37,23 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.flp_main = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.MDIPanel = new System.Windows.Forms.Panel();
             this.btn_close = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.MDIPanel = new System.Windows.Forms.Panel();
+            this.Einstellungen = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.btn_commit_changes = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.MDIPanel.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -146,6 +154,19 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "tabPage2";
             // 
+            // MDIPanel
+            // 
+            this.MDIPanel.Controls.Add(this.btn_commit_changes);
+            this.MDIPanel.Controls.Add(this.numericUpDown1);
+            this.MDIPanel.Controls.Add(this.trackBar1);
+            this.MDIPanel.Controls.Add(this.label3);
+            this.MDIPanel.Controls.Add(this.Einstellungen);
+            this.MDIPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MDIPanel.Location = new System.Drawing.Point(3, 3);
+            this.MDIPanel.Name = "MDIPanel";
+            this.MDIPanel.Size = new System.Drawing.Size(1182, 717);
+            this.MDIPanel.TabIndex = 0;
+            // 
             // btn_close
             // 
             this.btn_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -169,13 +190,58 @@
             this.panel3.Size = new System.Drawing.Size(365, 100);
             this.panel3.TabIndex = 2;
             // 
-            // MDIPanel
+            // Einstellungen
             // 
-            this.MDIPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MDIPanel.Location = new System.Drawing.Point(3, 3);
-            this.MDIPanel.Name = "MDIPanel";
-            this.MDIPanel.Size = new System.Drawing.Size(1182, 717);
-            this.MDIPanel.TabIndex = 0;
+            this.Einstellungen.AutoSize = true;
+            this.Einstellungen.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Einstellungen.ForeColor = System.Drawing.Color.White;
+            this.Einstellungen.Location = new System.Drawing.Point(0, 0);
+            this.Einstellungen.Name = "Einstellungen";
+            this.Einstellungen.Size = new System.Drawing.Size(223, 39);
+            this.Einstellungen.TabIndex = 1;
+            this.Einstellungen.Text = "Einstellungen";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(2, 72);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Buffer-Größe: ";
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(81, 56);
+            this.trackBar1.Maximum = 100;
+            this.trackBar1.Minimum = 5;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(267, 45);
+            this.trackBar1.TabIndex = 3;
+            this.trackBar1.TickFrequency = 10;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar1.Value = 5;
+            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(354, 68);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(67, 20);
+            this.numericUpDown1.TabIndex = 4;
+            // 
+            // btn_commit_changes
+            // 
+            this.btn_commit_changes.Enabled = false;
+            this.btn_commit_changes.Location = new System.Drawing.Point(999, 691);
+            this.btn_commit_changes.Name = "btn_commit_changes";
+            this.btn_commit_changes.Size = new System.Drawing.Size(180, 23);
+            this.btn_commit_changes.TabIndex = 5;
+            this.btn_commit_changes.Text = "Änderungen anwenden...";
+            this.btn_commit_changes.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btn_commit_changes.UseVisualStyleBackColor = true;
+            this.btn_commit_changes.Click += new System.EventHandler(this.btn_commit_changes_Click);
             // 
             // Form1
             // 
@@ -199,7 +265,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.MDIPanel.ResumeLayout(false);
+            this.MDIPanel.PerformLayout();
             this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -218,6 +288,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel MDIPanel;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label Einstellungen;
+        private System.Windows.Forms.Button btn_commit_changes;
     }
 }
 
